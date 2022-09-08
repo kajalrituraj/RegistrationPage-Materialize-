@@ -1,8 +1,9 @@
+
 .social_container {
-  height: 30px;
-  width: 30px;
+  height: 35px;
+  width: 35px;
   padding: 0;
-  margin: 0 10px;
+  margin: 0 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,3 +18,15 @@
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
+.Atag{
+  text-decoration: none;
+  color: rgb(38 198  249);
+  height:100%; 
+   font-size: 0.875rem;
+   letter-spacing: 0.15px;
+   }
+
+ a:hover {
+    text-decoration: underline;
+    color:"red";
+} 

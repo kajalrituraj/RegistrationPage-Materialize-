@@ -1,20 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Box, TextField, Typography, Checkbox, Button } from "@mui/material";
-import style from "../../styles/signupv1.module.css";
-import FB from "../Assets/facebook.svg";
-import TW from "../Assets/twitter.svg";
-import GH from "../Assets/github.svg";
-import GL from "../Assets/google.svg";
+import React, { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import MT from "../Assets/materialize.svg";
+import SignupCard from "../signupCard";
 
 const RegisterOne = () => {
-  const [email, setEmail] = useState("");
-  const [valid, setValidity] = useState("");
 
-  function validateEmail(mail) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(mail);
-  }
 
+  const logo = () => {
+    return (
+      <Box
+        sx={{
+          height: "1.625rem",
+          width: "24.5rem",
+          margin: "0px 0px 32px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ height: "26px", width: "47px" }}>
+          {" "}
+          <img src={MT} alt="" />
+        </Box>
+        <Box sx={{ height: "24px", width: "132px" }}>
+          <Typography
+            sx={{
+              margin: "0px 0px 0px 0.5rem",
+              letterSpacing: "0.15px",
+              color: " rgba(76, 78, 100, 0.87)",
+              lineHeight: "1",
+              fontWeight: "700",
+              fontSize: "1.5rem",
+            }}
+          >
+            Materialize
+          </Typography>
+        </Box>
+      </Box>
+    );
+  };
+
+  const shadow = {
+    height: "37.813rem",
+    boxShadow: " rgb(76 78 100 / 22%) 0px 2px 10px 0px",
+  };
   return (
     <Box
       sx={{
@@ -24,9 +53,10 @@ const RegisterOne = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
-      <Box
+      {/* <Box
         sx={{
           height: "37.813rem",
           width: "24.5rem",
@@ -46,22 +76,20 @@ const RegisterOne = () => {
           sx={{
             height: "1.625rem",
             width: "24.5rem",
-            // backgroundColor: "pink",
             margin: "0px 0px 32px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Box sx={{ height: "26px", width: "47px", backgroundColor: "blue" }}>
-            <Typography></Typography>
+          <Box sx={{ height: "26px", width: "47px" }}>
+            {" "}
+            <img src={MT} alt="" />
           </Box>
           <Box sx={{ height: "24px", width: "132px" }}>
             <Typography
               sx={{
                 margin: "0px 0px 0px 0.5rem",
-                fontFamily:
-                  "Inter, sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif,Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
                 letterSpacing: "0.15px",
                 color: " rgba(76, 78, 100, 0.87)",
                 lineHeight: "1",
@@ -88,9 +116,7 @@ const RegisterOne = () => {
               letterSpacing: "0.18px",
               fontWeight: "600",
               margin: "0px 0px 0.375rem",
-              fontSize: "1.4993rem",
-              fontFamily:
-                "Inter, sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif,Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
+              fontSize: "1.3118rem",
             }}
           >
             Adventure starts here 🚀
@@ -101,13 +127,13 @@ const RegisterOne = () => {
             margin: "0px 0px 24px 0px",
             fontWeight: "400",
             fontSize: "0.875rem",
+            letterSpacing: " 0.15px",
             lineHeight: "1.429",
             color: "rgba(76, 78, 100, 0.68)",
           }}
         >
           Make your app management easy and fun!
         </Box>
-        {/* <p>Make your app management easy and fun!</p> */}
         <Box
           sx={{
             width: "100%",
@@ -127,28 +153,46 @@ const RegisterOne = () => {
               setEmail(e.target.value);
 
               if (validateEmail(email)) {
-                setValidity("Valid Email");
+                setValidity("*Valid Email");
               } else {
-                setValidity("Invalid Email");
+                setValidity("*Invalid Email");
               }
             }}
-            sx={{ width: "100%", padding: "0px 0px 16px" }}
+            sx={{ width: "100%" }}
             id="outlined-basic"
             label="Email"
             variant="outlined"
           />
-          <Typography sx={{fontSize:"5px"}}>{valid}</Typography>
+
+          <Typography sx={{ fontSize: "9px", height: "20px" }}>
+            {valid}
+          </Typography>
         </Box>
         <Box>
-          <TextField
-            sx={{
-              width: "100%",
-            }}
-            name="password"
-            type="password"
-            placeholder="password"
-            label="Password"
-          />
+          <FormControl sx={{ width: "100%" }} variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={password.showPassword ? "text" : "password"}
+              value={password.password}
+              onChange={handleChange("password")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {password.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
         </Box>
         <Box
           sx={{
@@ -159,16 +203,16 @@ const RegisterOne = () => {
         >
           <Checkbox variant="solid" />
 
-          <Typography sx={{ height: "100%" }}>
-            I agree to {'  '}
-            <a
-              style={{
-                textDecoration: "none",
-                color: "rgb(38, 198, 249)",
-                height: "100%",
-              }}
-              href="#"
-            >
+          <Typography
+            sx={{
+              height: "100%",
+              color: "rgba(76, 78, 100, 0.68)",
+              fontWeight: "400",
+              fontSize: "0.875rem",
+            }}
+          >
+            I agree to {"  "}
+            <a className={style.Atag} href="#">
               privacy policy & terms
             </a>
           </Typography>
@@ -179,13 +223,14 @@ const RegisterOne = () => {
             width: "100%",
             color: "white",
             backgroundColor: "rgb(38, 198, 249)",
+            backgroundColor: "rgb(38, 198, 249)",
             "&:hover": {
-              backgroundColor: "red",
+              backgroundColor: "#23b7e7",
             },
             padding: "0.5rem 1.625rem",
             margin: "0px 0px 1.75rem",
             cursor: "pointer",
-            fontWeight: "500",
+            fontWeight: "400",
             borderRadius: "8px",
             boxShadow: "rgb(76 78 100 / 42%) 0px 4px 8px -4px",
             lineHeight: "1.734",
@@ -200,15 +245,23 @@ const RegisterOne = () => {
             justifyContent: "center",
           }}
         >
-          <Typography>
-            Already have an account?<a href="#">Sign in instead</a>
+          <Typography
+            sx={{
+              color: "rgba(76, 78, 100, 0.68)",
+              fontWeight: "400",
+              fontSize: "1rem",
+            }}
+          >
+            Already have an account?{" "}
+            <a className={style.Atag} style={{ fontSize: "1rem" }} href="#">
+              Sign in instead
+            </a>
           </Typography>
         </Box>
         <Box
           sx={{
             margin: "1.25rem 0px 1.875rem",
             textAlign: "center",
-            // justifyContent:"center",
             alignItems: "center",
             display: "flex",
             height: "24px",
@@ -253,7 +306,8 @@ const RegisterOne = () => {
             <img src={GL} alt="" />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
+      <SignupCard logo={logo} shadow={shadow}></SignupCard>
     </Box>
   );
 };
