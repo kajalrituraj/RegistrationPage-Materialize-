@@ -19,8 +19,9 @@ import TW from "./Assets/twitter.svg";
 import GH from "./Assets/github.svg";
 import GL from "./Assets/google.svg";
 
-const SignupCard = ({logo: Logo, shadow: Shadow}) => {
+const SignupCard = ({ logo: Logo, shadow: Shadow }) => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [valid, setValidity] = useState("");
   const [password, setpassword] = React.useState({
     password: "",
@@ -41,58 +42,34 @@ const SignupCard = ({logo: Logo, shadow: Shadow}) => {
     event.preventDefault();
   };
 
-  function validateEmail(mail) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(mail);
-  }
+//   function validateEmail(mail) {
+//     var re = /\S+@\S+\.\S+/;
+//     return re.test(mail);
+//   }
+function validateEmail(email) 
+{
+    var re =/[A-Za-z0-9]+[\._]?[a-z0-9]+[@]\w+[-]?\w+[.]\w{2,3}/;
+    return re.test(email.toLowerCase());
+}
 
   return (
     <Box
       sx={{
-          width: "24.5rem",
-          backgroundColor: "white",
-          position: "absolute",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: "9px",
-          overflow: "hidden",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "62px 28px 26px",
-          ...Shadow,
+        width: "24.5rem",
+        height: "fit-content",
+        backgroundColor: "white",
+        position: "absolute",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "9px",
+        overflow: "hidden",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "62px 28px 26px",
+        ...Shadow,
       }}
     >
-      {/* <Box
-        sx={{
-          height: "1.625rem",
-          width: "24.5rem",
-          margin: "0px 0px 32px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ height: "26px", width: "47px" }}>
-          {" "}
-          <img src={MT} alt="" />
-        </Box>
-        <Box sx={{ height: "24px", width: "132px" }}>
-          <Typography
-            sx={{
-              margin: "0px 0px 0px 0.5rem",
-              letterSpacing: "0.15px",
-              color: " rgba(76, 78, 100, 0.87)",
-              lineHeight: "1",
-              fontWeight: "700",
-              fontSize: "1.5rem",
-            }}
-          >
-            Materialize
-          </Typography>
-        </Box>
-      </Box> */}
       <Logo />
-
       <Box
         sx={{
           height: "32px",
@@ -132,6 +109,10 @@ const SignupCard = ({logo: Logo, shadow: Shadow}) => {
         }}
       >
         <TextField
+          value={username}
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
           sx={{ width: "100%" }}
           id="outlined-basic"
           label="Username"
