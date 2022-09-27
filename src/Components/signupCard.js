@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -20,15 +20,29 @@ import GH from "./Assets/github.svg";
 import GL from "./Assets/google.svg";
 
 const SignupCard = ({ logo: Logo, shadow: Shadow }) => {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [valid, setValidity] = useState("");
-  const [password, setpassword] = React.useState({
+  const [userValid, setUserValid] = useState("* Required");
+  const [email, setEmail] = useState("");
+  const [valid, setValidity] = useState("* Required");
+  const [passValid, setPassValidity] = useState("* Required");
+  const [password, setpassword] = useState({
     password: "",
     showPassword: false,
   });
+
   const handleChange = (prop) => (event) => {
     setpassword({ ...password, [prop]: event.target.value });
+    if (event.target.value === "") {
+      setPassValidity("* Required");
+    } else {
+      if (validatePassword(password.password)) {
+        setPassValidity("* Good to go");
+      } else {
+        setPassValidity(
+          "* Password should contain at least 8 character, 1 upper and lowercase and a digit and symbol"
+        );
+      }
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -42,15 +56,49 @@ const SignupCard = ({ logo: Logo, shadow: Shadow }) => {
     event.preventDefault();
   };
 
-//   function validateEmail(mail) {
-//     var re = /\S+@\S+\.\S+/;
-//     return re.test(mail);
-//   }
-function validateEmail(email) 
-{
-    var re =/[A-Za-z0-9]+[\._]?[a-z0-9]+[@]\w+[-]?\w+[.]\w{2,3}/;
+  function validateUsername(user) {
+    var re = /^[A-Za-z][A-Za-z0-9_]{3,20}$/;
+    return re.test(user);
+  }
+
+  function validateEmail(email) {
+    var re = /[A-Za-z0-9]+[._]?[a-z0-9]+[@]\w+[-]?\w+[.]\w{2,3}/;
     return re.test(email.toLowerCase());
-}
+  }
+
+  function validatePassword(pass) {
+    var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+    return re.test(pass);
+  }
+
+  const validStyleColor = {
+    color: "green",
+    fontWeight: "bold",
+  };
+
+  const invalidStyleColor = {
+    color: "red",
+  };
+
+  async function signUp() {
+    let pass = password["password"];
+    let userdetails = { userName: username, email: email, password: pass };
+
+    let result = await fetch(
+      `https://xpressotimesheet.herokuapp.com/api/auth/users/`,
+      {
+        method: "POST",
+        body: JSON.stringify(userdetails),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+    result = await result.json();
+    console.log("result", result);
+    // console.log(userdetails);
+  }
 
   return (
     <Box
@@ -63,13 +111,12 @@ function validateEmail(email)
         alignItems: "center",
         borderRadius: "9px",
         overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "62px 28px 26px",
+        padding: "50px 28px 26px",
         ...Shadow,
       }}
     >
       <Logo />
+      {/* Heading */}
       <Box
         sx={{
           height: "32px",
@@ -102,32 +149,60 @@ function validateEmail(email)
       >
         Make your app management easy and fun!
       </Box>
+      {/* Username */}
       <Box
         sx={{
           width: "100%",
-          margin: "0px 0px 16px",
         }}
       >
         <TextField
+          required={true}
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
+
+            if (e.target.value === "") {
+              setUserValid("* Required");
+            } else {
+              if (validateUsername(username)) {
+                setUserValid("* Valid Username");
+              } else {
+                setUserValid("* Invalid Username");
+              }
+            }
           }}
           sx={{ width: "100%" }}
           id="outlined-basic"
           label="Username"
           variant="outlined"
         />
+
+        <Typography
+          sx={{ fontSize: "9px", height: "20px" }}
+          style={
+            userValid === "* Valid Username"
+              ? validStyleColor
+              : invalidStyleColor
+          }
+        >
+          {userValid}
+        </Typography>
       </Box>
+      {/* Email */}
       <Box>
         <TextField
+          required={true}
           onChange={(e) => {
             setEmail(e.target.value);
 
-            if (validateEmail(email)) {
-              setValidity("*Valid Email");
+            if (e.target.value === "") {
+              setValidity("* Required");
             } else {
-              setValidity("*Invalid Email");
+              if (validateEmail(email)) {
+                setValidity("* Valid Email");
+              } else {
+                setValidity("* Invalid Email");
+              }
             }
           }}
           sx={{ width: "100%" }}
@@ -136,16 +211,23 @@ function validateEmail(email)
           variant="outlined"
         />
 
-        <Typography sx={{ fontSize: "9px", height: "20px" }}>
+        <Typography
+          sx={{ fontSize: "9px", height: "20px" }}
+          style={
+            valid === "* Valid Email" ? validStyleColor : invalidStyleColor
+          }
+        >
           {valid}
         </Typography>
       </Box>
+      {/* Password */}
       <Box>
         <FormControl sx={{ width: "100%" }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
           <OutlinedInput
+            required={true}
             id="outlined-adornment-password"
             type={password.showPassword ? "text" : "password"}
             value={password.password}
@@ -165,7 +247,16 @@ function validateEmail(email)
             label="Password"
           />
         </FormControl>
+        <Typography
+          sx={{ fontSize: "9px", height: "20px" }}
+          style={
+            passValid === "* Good to go" ? validStyleColor : invalidStyleColor
+          }
+        >
+          {passValid}
+        </Typography>
       </Box>
+      {/* Checkbox */}
       <Box
         sx={{
           display: "flex",
@@ -184,17 +275,18 @@ function validateEmail(email)
           }}
         >
           I agree to {"  "}
-          <a className={style.Atag} href="#">
+          <a className={style.Atag} href="#kl">
             privacy policy & terms
           </a>
         </Typography>
       </Box>
+      {/* Sign Up Button */}
       <Button
+        onClick={signUp}
         variant="solid"
         sx={{
           width: "100%",
           color: "white",
-          backgroundColor: "rgb(38, 198, 249)",
           backgroundColor: "rgb(38, 198, 249)",
           "&:hover": {
             backgroundColor: "#23b7e7",
@@ -210,6 +302,7 @@ function validateEmail(email)
       >
         SIGN UP
       </Button>
+      {/* Sign In Link */}
       <Box
         sx={{
           display: "flex",
@@ -225,14 +318,14 @@ function validateEmail(email)
           }}
         >
           Already have an account?{" "}
-          <a className={style.Atag} style={{ fontSize: "1rem" }} href="#">
+          <a className={style.Atag} style={{ fontSize: "1rem" }} href="#df">
             Sign in instead
           </a>
         </Typography>
       </Box>
       <Box
         sx={{
-          margin: "1.25rem 0px 1.875rem",
+          margin: "1rem 0px 1em",
           textAlign: "center",
           alignItems: "center",
           display: "flex",
@@ -256,6 +349,7 @@ function validateEmail(email)
           }}
         ></Box>
       </Box>
+      {/* Social Icons */}
       <Box
         sx={{
           height: "40px",
